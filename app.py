@@ -1,5 +1,6 @@
 from flask import Flask, request, jsonify, render_template
 from datetime import datetime
+import os
 
 app = Flask(__name__)
 
@@ -8,7 +9,7 @@ latest_data = {"temperature": None, "humidity": None, "timestamp": None}
 
 @app.route('/')
 def home():
-    return render_template('index.html')  # or return "Welcome to the Weather App"
+    return render_template('index.html')
 
 @app.route('/weather', methods=['POST'])
 def receive_weather_data():
@@ -29,4 +30,6 @@ def send_weather_data():
     return jsonify(latest_data)
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000)
+    # Use the PORT environment variable if it exists; otherwise, default to 5000
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host='0.0.0.0', port=port)
