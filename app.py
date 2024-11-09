@@ -7,9 +7,8 @@ app = Flask(__name__)
 latest_data = {"temperature": None, "humidity": None, "timestamp": None}
 
 @app.route('/')
-def index():
-    # Render the index page with the latest data
-    return render_template('index.html', data=latest_data)
+def home():
+    return render_template('index.html')  # or return "Welcome to the Weather App"
 
 @app.route('/weather', methods=['POST'])
 def receive_weather_data():
