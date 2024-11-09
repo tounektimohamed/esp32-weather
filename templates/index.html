@@ -28,37 +28,33 @@
     </style>
     <script>
         function updateData() {
-            fetch('/weather')
+            fetch('/data')
             .then(response => response.json())
             .then(data => {
                 document.querySelector('.data').innerHTML = `
-                    <p>Temperature: ${data.temperature} °C</p>
-                    <p>Humidity: ${data.humidity} %</p>
+                    <p>Temperature: ${data.temperature ?? 'Loading...'} °C</p>
+                    <p>Humidity: ${data.humidity ?? 'Loading...'} %</p>
                 `;
                 document.querySelector('.updated').innerHTML = `
-                    <p>Last Updated: ${new Date().toLocaleTimeString()}</p>
+                    <p>Last Updated: ${data.timestamp ?? 'Waiting for data...'}</p>
                 `;
             });
         }
-    
+
         setInterval(updateData, 60000); // Update every minute
+        window.onload = updateData; // Load data immediately on page load
     </script>
-    
 </head>
 <body>
     <h1>Weather Data</h1>
     
     <div class="data">
-        <p>Temperature: {{ data.temperature if data.temperature is not none else 'Loading...' }} °C</p>
-        <p>Humidity: {{ data.humidity if data.humidity is not none else 'Loading...' }} %</p>
+        <p>Temperature: Loading... °C</p>
+        <p>Humidity: Loading... %</p>
     </div>
     
     <div class="updated">
-        {% if data.temperature and data.humidity %}
-            <p>Last Updated: {{ data.timestamp }}</p>
-        {% else %}
-            <p>Waiting for data...</p>
-        {% endif %}
+        <p>Waiting for data...</p>
     </div>
 </body>
 </html>
