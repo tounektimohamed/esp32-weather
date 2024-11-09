@@ -5,25 +5,65 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Weather Data</title>
     <style>
+        /* General Styles */
         body {
             font-family: Arial, sans-serif;
-            margin: 20px;
-            padding: 20px;
-            background-color: #f0f8ff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #e6f7ff;
         }
         h1 {
+            color: #004d80;
+            font-size: 2rem;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        /* Weather Card Styles */
+        .card {
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            max-width: 400px;
+            width: 100%;
+            text-align: center;
+        }
+        
+        .data p {
+            margin: 20px 0;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
             color: #333;
         }
-        .data {
-            margin-top: 20px;
-            font-size: 24px;
+        .data p span {
+            font-weight: bold;
+            color: #006699;
         }
-        .data p {
-            margin: 5px 0;
+        
+        /* Icons */
+        .icon {
+            width: 24px;
+            height: 24px;
+            vertical-align: middle;
         }
+
+        /* Last Updated Text */
         .updated {
-            color: green;
-            font-size: 16px;
+            color: #33a673;
+            font-size: 0.9rem;
+            margin-top: 20px;
+        }
+
+        /* Loading State */
+        .loading {
+            color: #999;
         }
     </style>
     <script>
@@ -32,29 +72,36 @@
             .then(response => response.json())
             .then(data => {
                 document.querySelector('.data').innerHTML = `
-                    <p>Temperature: ${data.temperature ?? 'Loading...'} °C</p>
-                    <p>Humidity: ${data.humidity ?? 'Loading...'} %</p>
+                    <p><img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' fill='orange' class='icon' viewBox='0 0 24 24'><circle cx='12' cy='12' r='5'/><path d='M12 1v2M12 21v2M4.22 4.22l1.42 1.42M16.36 16.36l1.42 1.42M1 12h2m18 0h2M4.22 19.78l1.42-1.42M16.36 7.64l1.42-1.42'/></svg>" alt="Sun icon">Temperature: <span>${data.temperature ?? 'Loading...'} °C</span></p>
+                    <p><img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' fill='blue' class='icon' viewBox='0 0 24 24'><path d='M12 2C8.134 2 5 7.09 5 11a7 7 0 0014 0c0-3.91-3.134-9-7-9zm0 16a5 5 0 110-10 5 5 0 010 10z'/></svg>" alt="Humidity icon">Humidity: <span>${data.humidity ?? 'Loading...'} %</span></p>
                 `;
                 document.querySelector('.updated').innerHTML = `
-                    <p>Last Updated: ${data.timestamp ?? 'Waiting for data...'}</p>
+                    <p>Last Updated: <span>${data.timestamp ?? 'Waiting for data...'}</span></p>
+                `;
+            })
+            .catch(() => {
+                document.querySelector('.updated').innerHTML = `
+                    <p class="loading">Error fetching data. Retrying...</p>
                 `;
             });
         }
 
-        setInterval(updateData, 60000); // Update every minute
+        setInterval(updateData, 1000); // Update every second for real-time updates
         window.onload = updateData; // Load data immediately on page load
     </script>
 </head>
 <body>
-    <h1>Weather Data</h1>
-    
-    <div class="data">
-        <p>Temperature: Loading... °C</p>
-        <p>Humidity: Loading... %</p>
-    </div>
-    
-    <div class="updated">
-        <p>Waiting for data...</p>
+    <div class="card">
+        <h1>Weather Data</h1>
+        
+        <div class="data">
+            <p><img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' fill='orange' class='icon' viewBox='0 0 24 24'><circle cx='12' cy='12' r='5'/><path d='M12 1v2M12 21v2M4.22 4.22l1.42 1.42M16.36 16.36l1.42 1.42M1 12h2m18 0h2M4.22 19.78l1.42-1.42M16.36 7.64l1.42-1.42'/></svg>" alt="Sun icon"> Temperature: <span>Loading...</span> °C</p>
+            <p><img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' fill='blue' class='icon' viewBox='0 0 24 24'><path d='M12 2C8.134 2 5 7.09 5 11a7 7 0 0014 0c0-3.91-3.134-9-7-9zm0 16a5 5 0 110-10 5 5 0 010 10z'/></svg>" alt="Humidity icon"> Humidity: <span>Loading...</span> %</p>
+        </div>
+        
+        <div class="updated">
+            <p class="loading">Waiting for data...</p>
+        </div>
     </div>
 </body>
 </html>
