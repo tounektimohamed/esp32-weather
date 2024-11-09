@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather Data</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            padding: 20px;
+            background-color: #f0f8ff;
+        }
+        h1 {
+            color: #333;
+        }
+        .data {
+            margin-top: 20px;
+            font-size: 24px;
+        }
+        .data p {
+            margin: 5px 0;
+        }
+        .updated {
+            color: green;
+            font-size: 16px;
+        }
+    </style>
+    <script>
+        function updateData() {
+            fetch('/weather')
+            .then(response => response.json())
+            .then(data => {
+                document.querySelector('.data').innerHTML = `
+                    <p>Temperature: ${data.temperature} °C</p>
+                    <p>Humidity: ${data.humidity} %</p>
+                `;
+                document.querySelector('.updated').innerHTML = `
+                    <p>Last Updated: ${new Date().toLocaleTimeString()}</p>
+                `;
+            });
+        }
+    
+        setInterval(updateData, 60000); // Update every minute
+    </script>
+    
+</head>
+<body>
+    <h1>Weather Data</h1>
+    
+    <div class="data">
+        <p>Temperature: {{ data.temperature if data.temperature is not none else 'Loading...' }} °C</p>
+        <p>Humidity: {{ data.humidity if data.humidity is not none else 'Loading...' }} %</p>
+    </div>
+    
+    <div class="updated">
+        {% if data.temperature and data.humidity %}
+            <p>Last Updated: {{ data.timestamp }}</p>
+        {% else %}
+            <p>Waiting for data...</p>
+        {% endif %}
+    </div>
+</body>
+</html>
